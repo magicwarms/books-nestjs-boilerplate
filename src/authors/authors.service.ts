@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateAuthorDto } from './dto/create-author.dto';
 import { UpdateAuthorDto } from './dto/update-author.dto';
-import { Author } from '@prisma/client';
+import { Author, Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
@@ -18,15 +18,19 @@ export class AuthorsService {
     return this.prisma.author.findMany()
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} author`;
+  async findOne(id: number): Promise<Author | null> {
+    if (!id) throw new Error('Id is required')
+    return this.prisma.author.findUnique({ where: { id } })
   }
 
-  update(id: number, updateAuthorDto: UpdateAuthorDto) {
-    return `This action updates a #${id} author`;
+  async update(id: number, updateAuthorDto: UpdateAuthorDto): Promise<Author> {
+    return this.prisma.author.update({
+      where: { id },
+      data: updateAuthorDto
+    })
   }
 
   remove(id: number) {
-    return `This action removes a #${id} author`;
+    return this.prisma.author.delete({ where: { id } })
   }
 }
