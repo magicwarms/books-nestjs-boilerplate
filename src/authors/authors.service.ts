@@ -10,27 +10,29 @@ export class AuthorsService {
 
   async create(createAuthorDto: CreateAuthorDto): Promise<Author> {
     return this.prisma.author.create({
-      data: createAuthorDto
-    })
+      data: createAuthorDto,
+    });
   }
 
   async findAll(): Promise<Author[]> {
-    return this.prisma.author.findMany()
+    return this.prisma.author.findMany();
   }
 
   async findOne(id: number): Promise<Author | null> {
-    if (!id) throw new Error('Id is required')
-    return this.prisma.author.findUnique({ where: { id } })
+    if (!id) throw new Error('Id is required');
+    const author = await this.prisma.author.findUnique({ where: { id } });
+    if (!author) throw new Error('Author not found');
+    return author;
   }
 
   async update(id: number, updateAuthorDto: UpdateAuthorDto): Promise<Author> {
     return this.prisma.author.update({
       where: { id },
-      data: updateAuthorDto
-    })
+      data: updateAuthorDto,
+    });
   }
 
   remove(id: number) {
-    return this.prisma.author.delete({ where: { id } })
+    return this.prisma.author.delete({ where: { id } });
   }
 }
