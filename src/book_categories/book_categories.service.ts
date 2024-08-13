@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateBookCategoryDto } from './dto/create-book_category.dto';
 import { UpdateBookCategoryDto } from './dto/update-book_category.dto';
+import { LazyModuleLoader } from '@nestjs/core';
 
 @Injectable()
 export class BookCategoriesService {

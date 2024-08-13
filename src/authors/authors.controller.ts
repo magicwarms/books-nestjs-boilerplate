@@ -21,7 +21,6 @@ import { AuthorEntity } from './authors.entity';
 
 @Controller({
   version: '1',
-
   path: 'authors',
 })
 @ApiTags('authors')

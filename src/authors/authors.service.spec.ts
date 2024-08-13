@@ -3,8 +3,10 @@ import { AuthorsService } from './authors.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { PrismaClient } from '@prisma/client';
 import { DeepMockProxy, mockDeep } from 'jest-mock-extended';
+import { AuthorRepository } from './authors.repository';
 
 describe('AuthorsService', () => {
+  let authorRepository: AuthorRepository;
   let authorService: AuthorsService;
   let prismaMock: DeepMockProxy<PrismaClient>;
   beforeEach(async () => {
@@ -12,6 +14,7 @@ describe('AuthorsService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         AuthorsService,
+        AuthorRepository,
         {
           provide: PrismaService,
           useValue: prismaMock,
@@ -19,7 +22,9 @@ describe('AuthorsService', () => {
       ],
     }).compile();
 
+    authorRepository = module.get<AuthorRepository>(AuthorRepository);
     authorService = module.get<AuthorsService>(AuthorsService);
+
 
     prismaMock.author.findMany.mockClear();
   });
@@ -47,12 +52,13 @@ describe('AuthorsService', () => {
         },
       ]
 
-      prismaMock.author.findMany.mockResolvedValue(allAuthors);
+      authorRepository.findAll = jest.fn().mockResolvedValue(allAuthors);
 
       const authors = await authorService.findAll();
+
       expect(authors).toBeInstanceOf(Array);
       expect(authors).toEqual(allAuthors);
-      expect(prismaMock.author.findMany).toHaveBeenCalled();
+      expect(authorRepository.findAll).toHaveBeenCalled();
     });
   })
 
