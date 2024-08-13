@@ -31,3 +31,6 @@ jobs:
       - name: Run Tests
         run: npm test
         working-directory: src
+
+      - name: Run Build
+        run: npm run build
